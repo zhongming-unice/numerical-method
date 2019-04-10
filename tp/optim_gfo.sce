@@ -4,13 +4,13 @@
 //exec('optim_fonction.sci')
 
 function [J,G]=cost(v)
-    [J,G]=cost1(v)
+    [J,G]=costR(v)
 endfunction
 
 
 N = 10
 epsg = 10^-6
-Kmax = 1000
+Kmax = 100
 uk = rand(N,1)
 J_cost_gf = zeros(Kmax,1)
 J_cost_go = zeros(Kmax,1)
@@ -33,13 +33,13 @@ end
 //                                                                  = (J(uk - tk-1*G(uk)) - J(uk) - G(uk)*tk-1) / tk-1^2
 
 
-uk = rand(N,1)
-kappa = 0.03
+u = rand(N,1)
+kappa = 0.05
 t = zeros(Kmax,1)
 t(1) = 1
 for k = 2:Kmax
     
-    [J,G] = cost(uk)
+    [J,G] = cost(u)
     if(norm(G)<epsg) then break
         else
         J_cost_go(k) = J
@@ -47,12 +47,12 @@ for k = 2:Kmax
         a0 = J
         a1 = -norm(G)^2
     
-        [J1,G1] = cost(uk-t(k-1)*G)
+        [J1,G1] = cost(u-t(k-1)*G)
         a2 = (J1-a0-a1*t(k-1)) / t(k-1)^2 
         t(k) = -a1/(2*a2)
         t(k) = t(k) * kappa
-        u1 = uk - t(k)*G
-        uk = u1
+        u2 = u - t(k)*G
+        u = u2
     end
     
 end
@@ -61,5 +61,5 @@ end
 
 scf(1)
 plot2d(J_cost_gf,style=11)
-plot2d(J_cost_go,style=12)
+plot2d(J_cost_go,style=22)
 legend("pas fixe","pas optimal")

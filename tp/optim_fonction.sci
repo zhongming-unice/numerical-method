@@ -1,3 +1,6 @@
+//MAM_OPT_TP7
+//auteur : ZHONG Ming
+//
 clear()
 
 function [J,G]=cost1(v)
